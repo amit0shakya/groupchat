@@ -4,115 +4,27 @@
 
 	<script type="text/javascript">
 
-		var user, socket = io('http://localhost:3000');
-
-		console.log(socket)
+		//var user, socket = io('http://localhost:3000');
+        var socket = io();
+        
+        console.log(socket,"<<<socket")
 
 		$(document).ready(function(){
-			$(function(){
-
-				function showOwnmsg(msg){
-
-					$("#chatwindow").append(
-						"<div class='selfmsg'>"+msg+" <span class='userdiv'>:"+user
-						+"</span></div>"
-					)
-
-					$('#msgbox').val('')
-					
-				}
-
-				function showOthersmsg(data){
-
-					if(data==undefined || data._user == user){
-						return false;
-					}
-					
-					$("#chatwindow").append(
-						"<div class='othersmsg'><span class='userdiv'>"+data._user+":</span>"+data.msg+" </div>"
-					)
-
-					$('#msgbox').val('')
-				}
-
-
-
-				$("#join").click(function(){
-					
-					user=$("#username").val()
-					
-					if(user.length<=3){
-
-						$(".errormsg").css({'display':'block'});
-						return false;
-
-					}else{
-
-						$(".errormsg").css({'display':'none'});
-						//socket.on('userchat',{data:'chat message is here'})
-						socket.emit('join',user)
-
-						$('.loginbox').css({'display':'none'});
-						$('#chatwindow').css({'display':'block'})
-						$('.controlbox').css({'display':'block'})
-					}
-
-				})
-
-
-				$('#msg').click(function(){
-					//sending message to server
-					socket.emit('userchat',{"_user":user, msg:$('#msgbox').val()})
-					showOwnmsg($('#msgbox').val());
-				})
-
-
-				socket.on('servermsg',function(data){
-					//Recieve server msg
-					if(data._user!==user || data._user!=undefined){
-						showOthersmsg(data)
-					}
-				})
-			})	
-		})
-
+        })
 		
 	</script>
 
 	<style>
-
-		body{margin:0px; padding: 0px; background-color: #828282;}
-		.wrapper{width:300px; height: auto; margin:0 auto;}
-		#chatwindow{width:300px; height:300px; overflow-y:scroll; border:1px solid #000;background-color: #fff; display: none;}
-		.controlbox{ height: 30px; width:300px; padding-top: 10px; display: none;}
-		#msgbox{width:191px;}
-		.loginbox{width:300px; height:25px; margin: 100 auto 0px auto; position: relative;}
-		.errormsg{width:200px; border:1px solid red; height:30px; position: absolute; 
-			text-align: center; background-color: red; color:#fff; line-height: 30px; top:-50px; display: none;}
-		.errormsg img{position: absolute;bottom: -13px; left: -2px;}
-		.selfmsg{float:left; width: 280px; min-height: 15px; text-align: right; 
-			background-color: #9be99e;}
-		.othersmsg{float:left; width: 280px; min-height: 15px; background-color: #ececec;}
-		.userdiv{font-weight: 600; padding: 0px 5px}
+        .chat{width:300px; height:500px; border:1px solid #000;}
+        form{width:300px; margin:5px 0px;}
+        form input[type="text"]{width: 240px;}
 	</style>
 	<body>
-		<div class="wrapper">	
-			<div id="chatwindow">
-	
-			</div>
-			<div class="controlbox">
-				<input type="text" id="msgbox" placeholder="Type something.." name="msgbox">
-				<button type="submit" id="msg">Send Message</button>
-			</div>
-
-			<div class="loginbox">
-				<input type="text" name="username" placeholder="Enter your name" id='username'>
-				<button type="submit" id="join">JOIN CHAT</button>
-				<div class="errormsg">
-					Enter name here
-					<img src="img/dnarrow.png" width="20px" height="20px">
-				</div>
-			</div>
-		</div>
+        <div class="chat">
+        </div>
+        <form id="sendmsg">
+            <input type="text" placeholder="Input your message" id="msg">
+            <button type="submit">submit</button>
+        </form>
 	</body>
 </html>

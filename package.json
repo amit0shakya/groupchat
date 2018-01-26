@@ -2,7 +2,7 @@
   "name": "wechat",
   "version": "1.0.0",
   "description": "online chat app",
-  "main": "app",
+  "main": "server",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

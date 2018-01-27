@@ -10,21 +10,55 @@
         console.log(socket,"<<<socket")
 
 		$(document).ready(function(){
+            
+          
         })
 		
+        
+        window.onload=function(){
+        
+            //$(".loginwrapper").css({'height':window.innerHeight+'px'})
+            
+            avtaar={smiley:'',name:''};
+            
+            $("#sendmsg").click(function(e){
+              var msg=$("#msg").val();
+              if(msg.length>0){
+                socket.emit('msgonserver',msg)
+              }
+            })
+          
+            socket.on('msgonclient',function(msg){
+                console.log('recieve messege '+msg);
+                $(".chat").append("<div>"+msg+" </div>")
+            })  
+            
+        }
+        
 	</script>
 
 	<style>
-        .chat{width:300px; height:500px; border:1px solid #000;}
-        form{width:300px; margin:5px 0px;}
-        form input[type="text"]{width: 240px;}
+        body{margin: 0px; padding: 0px;}
+        .chatwrapper{width:300px; height:550px; margin: 0 auto;}
+        .chat{width:100%; height:500px; border:1px solid #000; overflow: scroll; overflow-y: auto;  overflow-x: hidden;}
+        #sendmsg{text-align:center; margin: 5px;}
+        .loginwrapper{width: 100%; height:600px; background-color: rgba(0,0,0,.5); position: absolute;}
 	</style>
 	<body>
-        <div class="chat">
+        
+        <!--
+        <div class="loginwrapper">
+            
+            
         </div>
-        <form id="sendmsg">
-            <input type="text" placeholder="Input your message" id="msg">
-            <button type="submit">submit</button>
-        </form>
+        -->
+        
+        <div class="chatwrapper">
+            <div class="chat"></div>
+            <div id="sendmsg">
+                <input type="text" placeholder="Input your message" id="msg">
+                <button type="submit" id="sendmsg">submit</button>
+            </div>
+        </div>
 	</body>
 </html>

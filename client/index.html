@@ -23,9 +23,13 @@
             
             $("#sendmsg").click(function(e){
               var msg=$("#msg").val();
+                
               if(msg.length>0){
                 socket.emit('msgonserver',msg)
               }
+            
+                $("#msg").val('')
+                
             })
           
             socket.on('msgonclient',function(msg){
@@ -55,7 +59,7 @@
         
         <div class="chatwrapper">
             <div class="chat"></div>
-            <div id="sendmsg">
+            <div style="text-align:center">
                 <input type="text" placeholder="Input your message" id="msg">
                 <button type="submit" id="sendmsg">submit</button>
             </div>

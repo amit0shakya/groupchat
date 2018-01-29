@@ -17,26 +17,49 @@ app.engine('html',require('ejs').renderFile);
 app.set('views','./client')
 
 app.use('/js', express.static(path.join(__dirname, './lib/js')))
-//app.use('/img', express.static(path.join(__dirname, './lib/images')))
+app.use('/img', express.static(path.join(__dirname, './lib/images/')))
 
 app.get('/',function(req,res){
 	res.render("index.html");
     //res.send("hello world")
 })
 
-io.on('connection',function(socket){
-    console.log('user connected');
+const general = io.of('/general').clients();
+let users=[];
+
+
+general.on('connection',function(socket){
     
-    socket.on('disconnect',function(){
-        console.log('user disconnected');
+    socket.join('general');
+    
+    socket.on('login',function(_user){
+        
+        const _id=socket.id;
+        
+        general.connected[_id].emit('welcome',{'me':{'users':users,'id':_id},"others":users});
+        
+        users.push({
+            id:_id,
+            username:_user.uname,
+            avtaar:_user.avtaarid
+        })
+        
+        room=general.sockets
+        
+        general.emit('userlogin',users[users.length-1])
+        
+    })
+    
+    
+    socket.on('disconnect',function(_d){
+        
+        console.log('user disconnected');  
     })
     
     socket.on('msgonserver',function(msg){
-        console.log(msg,"<<<chat msg")
         
-        io.emit('msgonclient',msg)
+        general.emit('msgonclient',msg)
     })
-    
     
 })
 

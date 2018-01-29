@@ -3,63 +3,159 @@
 	<script type="text/javascript" src="js/jquery.js"></script>
 
 	<script type="text/javascript">
-
-		//var user, socket = io('http://localhost:3000');
-        var socket = io();
         
-        console.log(socket,"<<<socket")
-
-		$(document).ready(function(){
-            
-          
-        })
-		
-        
+        var socket;
+        var user={uname:'',avtaarid:0,msg:'',_id:''}
+    
         window.onload=function(){
-        
-            //$(".loginwrapper").css({'height':window.innerHeight+'px'})
             
-            avtaar={smiley:'',name:''};
+            var hgt=window.innerHeight;
+            
+            $(".namewrapper").css({'top':((hgt/2)-90)+'px'})
+            $(".avtaarwrapper").css({'top':((hgt/2)-200)+'px'})
+            
+         
+            for(i=1;i<=16;i++){
+                $(".avtaar ul").append("<li val="+i+" class='avtaarbtn'></li>");
+            }
+            
+            $(".avtaarbtn").hover(function(){
+                if(user.avtaarid!=$(this).attr('val')){
+                    $(this).css({'opacity':1})
+                }
+            })
+            
+            $(".avtaarbtn").mouseout(function(){
+                if(user.avtaarid!=$(this).attr('val')){
+                    $(this).css({'opacity':0})    
+                }
+                
+            })
+            
+            
+            $(".avtaarbtn").click(function(){
+                
+                if(user.avtaarid!=0){
+                  $(".avtaar ul li").eq(user.avtaarid-1).css({'opacity':0})
+                }
+                
+                user.avtaarid=$(this).attr('val');
+                
+            })
+            
+            
+            
+            $(".nambebutton").click(function(){
+                user.uname=$('#name').val();
+                
+                if(user.uname.length>0){
+                    $(".namewrapper").css({'display':'none'});
+                    $(".avtaarwrapper").css({'display':'inline'});
+                }
+            })
+            
+            $(".avtaarselect").click(function(){
+                $(".loginwrapper").css({'display':'none'});
+                login();
+                socket.emit('login',user);
+            })
             
             $("#sendmsg").click(function(e){
-              var msg=$("#msg").val();
+              user.msg=$("#msg").val();
                 
-              if(msg.length>0){
-                socket.emit('msgonserver',msg)
+              if(user.msg.length>0){
+                socket.emit('msgonserver',user)
               }
             
                 $("#msg").val('')
                 
             })
-          
-            socket.on('msgonclient',function(msg){
-                console.log('recieve messege '+msg);
-                $(".chat").append("<div>"+msg+" </div>")
-            })  
             
+            function login(){
+                socket = io('/general');
+            
+                socket.on('msgonclient',function(chatdata){
+                    console.log('recieve messege ',chatdata);
+                    $(".chat").append("<div>"+chatdata.msg+" </div>")
+                })
+
+                socket.on('welcome',function(data){
+                    console.log(data,"<<<data welcome")
+                })
+                
+                socket.on('userlogin',function(_user){
+                    addnewuser(_user);
+                })
+                        
+            }
+            
+            function addnewuser(user){
+                
+                console.log(user,"<<<user")
+                
+                imgpath="img/avtaars/"+user.avtaar+".png";
+                
+                $(".userlist ul")
+                .append("<li> <div class='usericon'><img src="+imgpath+"></div> <p>"+user.username+"</p> </li>")
+            }
         }
         
 	</script>
 
 	<style>
         body{margin: 0px; padding: 0px;}
-        .chatwrapper{width:300px; height:550px; margin: 0 auto;}
-        .chat{width:100%; height:500px; border:1px solid #000; overflow: scroll; overflow-y: auto;  overflow-x: hidden;}
+        .chatwrapper{width:450px; height:550px; margin: 0 auto;}
+        .chat{width:250px; height:500px; border:1px solid #efefef; overflow: scroll; overflow-y: auto;  overflow-x: hidden; padding:5px; float: left;}
+        .userlist{width:188px; height:512px; background-color: #efefef;float: left;}
         #sendmsg{text-align:center; margin: 5px;}
-        .loginwrapper{width: 100%; height:600px; background-color: rgba(0,0,0,.5); position: absolute;}
+        .loginwrapper{width: 100%; height:600px; background-color: #fff; position: absolute;}
+        .namewrapper{width:300px; height:130px; margin: 0 auto; text-align: center; left: 0px; right: 0px; position: absolute;}
+        .avtaarwrapper{width:300px; height: 400px; position: absolute;left: 0px; right: 0px;  margin: 0 auto;
+                        background-color: #fff; display: none}
+        .avtaarwrapper h2{ width: 100%; text-align: center; margin: 5px 0px;}
+        .avtaar{width:300px; height: 330px; background-image: url("img/avtaar_big.png"); }
+        .nextButton2{margin:5px; float: right;}
+        .avtaar ul{margin: 0px; padding: 0px;}
+        .avtaar ul li{list-style: none; margin: 0px; padding: 0px;width:75px; height: 82px; float: left; box-sizing:border-box; opacity: 0; 
+            display: block; border: 1px solid #f00;}
+        
+        .selectAvtaar{border:3px solid #00f;}
+        
+        .userlist ul{margin:0px; padding: 0px;}
+        .userlist ul li{margin:0px; padding: 0px; list-style: none; width:100%; height: 35px;}
+        .userlist ul li .usericon{margin: 5px; width:25px; height:25px; float: left;}
+        .userlist ul li p{float: left; margin: 0px; height: 30px; line-height: 30px; padding: 0px;}
 	</style>
 	<body>
         
-        <!--
+        
         <div class="loginwrapper">
+            <div class="namewrapper">
+                <h2>Enter your Name</h2>
+                <input type="text" placeholder="Your Name here" id="name">
+                <button type="button" class="nambebutton">Next</button>
+            </div>  
             
+            <div class="avtaarwrapper">
+                <h2>Choose your desire Avtaar</h2>
+                <div class="avtaar">
+                    <ul>
+                    </ul>
+                </div>
+                <button type="button" class="avtaarselect">Enter Chat</button>
+            </div>  
             
         </div>
-        -->
+        
         
         <div class="chatwrapper">
             <div class="chat"></div>
-            <div style="text-align:center">
+            <div class="userlist">
+                <ul>
+                    
+                </ul>
+            </div>
+            <div style="text-align:center; width:100%;float:left;">
                 <input type="text" placeholder="Input your message" id="msg">
                 <button type="submit" id="sendmsg">submit</button>
             </div>

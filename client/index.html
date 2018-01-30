@@ -16,6 +16,12 @@
             $(".avtaarwrapper").css({'top':((hgt/2)-200)+'px'})
             
          
+            $(".smileys ul li").click(function(){
+                //console.log($(this).html(),"<<<value")
+                var value=$(this).html()
+                $("#msg").val(value)
+            })
+            
             for(i=1;i<=16;i++){
                 $(".avtaar ul").append("<li val="+i+" class='avtaarbtn'></li>");
             }
@@ -115,11 +121,6 @@
                         finalstr+="<span style='float:left;padding:0px 2px;'>"+str+"</span>";
                     }
                     
-                    
-                    
-                    
-                    
-                    
                     return finalstr;
                     
                 }
@@ -168,7 +169,7 @@
                 
                 imgpath="img/avtaars/"+user.avtaar+".png";
                 
-                $(".userlist ul")
+                $(".userlist .list ul")
                 .append("<li id="+user.id+"> <div class='usericon'><img src="+imgpath+"></div> <p>"+user.username+"</p> </li>")
                 
             }
@@ -196,6 +197,8 @@
         
         .selectAvtaar{border:3px solid #00f;}
         
+        
+        .userlist .list{width:188px; height: 400px; float: left;}
         .userlist ul li{margin:0px; padding: 0px; list-style: none; width:100%; height: 35px;}
         .userlist ul li .usericon{margin: 5px; width:25px; height:25px; float: left;}
         .userlist ul li p{float: left; margin: 0px; height: 30px; line-height: 30px; padding: 0px;}
@@ -210,7 +213,9 @@
         .othersmsg .box .msg{ float:left; background-color:#939393; padding:5px; color:#fff; border-radius: 5px; margin:0px 5px }
         .othersmsg .box .msg p{margin:0px;}
         .othersmsg .box img{width:15px; height:24px; float: left;}
-        
+        .smileys{ width:188px;float:left; min-height:50px; left:0px; bottom:0px; overflow: hidden;}
+        .smileys ul li{width:47px; height:40px; float: left; text-align: center; line-height: 40px; box-sizing: border-box; border:1px solid #bababa;
+        cursor: pointer;}
 	</style>
 	<body>
         
@@ -240,9 +245,19 @@
                 </ul>
             </div>
             <div class="userlist">
-                <ul>
+                <div class="list">
+                    <ul>
                     
-                </ul>
+                    </ul>
+                </div>
+                <div class="smileys">
+                    <ul>
+                        <li>:)</li>
+                        <li>:D</li>
+                        <li>:P</li>
+                        <li>:(</li>
+                    </ul>
+                </div>
             </div>
             <div style="text-align:center; width:100%;float:left;">
                 <input type="text" placeholder="Input your message" id="msg">

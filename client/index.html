@@ -34,13 +34,10 @@
             
             
             $(".avtaarbtn").click(function(){
-                
                 if(user.avtaarid!=0){
                   $(".avtaar ul li").eq(user.avtaarid-1).css({'opacity':0})
                 }
-                
-                user.avtaarid=$(this).attr('val');
-                
+                user.avtaarid=$(this).attr('val');    
             })
             
             
@@ -76,7 +73,20 @@
             
                 socket.on('msgonclient',function(chatdata){
                     console.log('recieve messege ',chatdata);
-                    $(".chat").append("<div>"+chatdata.msg+" </div>")
+                    
+                    var liData=''
+                    
+                    if(chatdata.id==user.id){
+                        //user sent this message
+                        liData="<li class='usermsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+chatdata.msg+"</p> </span></div></li>"
+                        
+                    }else{
+                        //other people send this message
+                        liData="<li class='othersmsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+chatdata.msg+"</p> </span></div></li>";
+                        
+                    }
+                        
+                    $(".chat ul").append(liData)
                 })
 
                 socket.on('welcome',function(data){
@@ -124,8 +134,6 @@
                 
                 imgpath="img/avtaars/"+user.avtaar+".png";
                 
-            //    console.log(user.id,"<<<user id")
-                
                 $(".userlist ul")
                 .append("<li id="+user.id+"> <div class='usericon'><img src="+imgpath+"></div> <p>"+user.username+"</p> </li>")
                 
@@ -136,6 +144,8 @@
 
 	<style>
         body{margin: 0px; padding: 0px;}
+        ul{margin:0px; padding: 0px;}
+        
         .chatwrapper{width:450px; height:550px; margin: 0 auto;}
         .chat{width:250px; height:500px; border:1px solid #efefef; overflow: scroll; overflow-y: auto;  overflow-x: hidden; padding:5px; float: left;}
         .userlist{width:188px; height:512px; background-color: #efefef;float: left;}
@@ -147,19 +157,28 @@
         .avtaarwrapper h2{ width: 100%; text-align: center; margin: 5px 0px;}
         .avtaar{width:300px; height: 330px; background-image: url("img/avtaar_big.png"); }
         .nextButton2{margin:5px; float: right;}
-        .avtaar ul{margin: 0px; padding: 0px;}
         .avtaar ul li{list-style: none; margin: 0px; padding: 0px;width:75px; height: 82px; float: left; box-sizing:border-box; opacity: 0; 
             display: block; border: 1px solid #f00;}
         
         .selectAvtaar{border:3px solid #00f;}
         
-        .userlist ul{margin:0px; padding: 0px;}
         .userlist ul li{margin:0px; padding: 0px; list-style: none; width:100%; height: 35px;}
         .userlist ul li .usericon{margin: 5px; width:25px; height:25px; float: left;}
         .userlist ul li p{float: left; margin: 0px; height: 30px; line-height: 30px; padding: 0px;}
+        
+        .chat ul li{list-style: none;}
+        .usermsg .box{width:235px;float: right;}
+        .usermsg .box .msg{ float:right; background-color:#4080ff; padding:5px; color:#fff; border-radius: 5px; margin:0px 5px }
+        .usermsg .box .msg p{margin:0px;}
+        .usermsg .box img{width:15px; height:24px; float: right;}
+        
+        .othersmsg .box{width:235px;float: left;}
+        .othersmsg .box .msg{ float:left; background-color:#939393; padding:5px; color:#fff; border-radius: 5px; margin:0px 5px }
+        .othersmsg .box .msg p{margin:0px;}
+        .othersmsg .box img{width:15px; height:24px; float: left;}
+        
 	</style>
 	<body>
-        
         
         <div class="loginwrapper">
             <div class="namewrapper">
@@ -181,7 +200,39 @@
         
         
         <div class="chatwrapper">
-            <div class="chat"></div>
+            <div class="chat">
+                <ul>
+                <!--
+                <li class="usermsg">
+                    <div class="box">
+                        
+                        <img src="img/avtaars/1.png">  
+                        
+                        <span class="msg">
+                            <p>Hello user msg</p>
+                            
+                        </span>
+                        
+                    </div>
+                        
+                </li>
+                    
+                <li class="othersmsg">
+                    
+                    <div class="box">
+                        <img src="img/avtaars/1.png">  
+                        <span class="msg">
+                            <p>Hello user msg</p>
+                        </span>
+                    </div>
+                        
+                </li>-->
+                    
+                    
+                    
+                    
+                </ul>
+            </div>
             <div class="userlist">
                 <ul>
                     

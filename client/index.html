@@ -82,7 +82,7 @@
                     
                     var msg=checksmileys(chatdata.msg)
                     
-                    console.log(msg)
+                 //   console.log(msg)
                     
                     var liData='';
                     
@@ -107,13 +107,13 @@
                     for(let i=0;i<msgArr.length;i++){
                         str=msgArr[i];
                         
-                        console.log(msgArr[i],"<<ABC")
+                   //     console.log(msgArr[i],"<<ABC")
                         
                         for(let j=0;j<smileyarr.length;j++){
                             smiley=smileyarr[j].str;
                             
                            if(str.trim()==smiley.trim()){
-                               console.log(str,"<<<<msgArr[i] A")
+                             //  console.log(str,"<<<<msgArr[i] A")
                                str="<img style='width:20px; height:20px; padding:0px 3px;' src='img/smileys/"+smileyarr[j].img+".gif'>";               
                            }
                         }
@@ -129,7 +129,7 @@
 
                 socket.on('welcome',function(data){
                     
-                    console.log(data,"<<<data")
+                    //console.log(data,"<<<data")
                     
                     user.id=data.me.id;
                     user.username=data.me.user.uname;

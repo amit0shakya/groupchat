@@ -6,7 +6,8 @@
         
         var socket;
         var user={username:'',avtaar:0,msg:'',id:''}
-    
+        var smileyarr=[{str:':)', img:'cool'},{str:':D', img:'laugh'},{str:':P', img:'thongue'},{str:':(', img:'worried'}];
+        
         window.onload=function(){
             
             var hgt=window.innerHeight;
@@ -72,22 +73,58 @@
                 socket = io();
             
                 socket.on('msgonclient',function(chatdata){
-                    console.log('recieve messege ',chatdata);
                     
-                    var liData=''
+                    var msg=checksmileys(chatdata.msg)
+                    
+                    console.log(msg)
+                    
+                    var liData='';
                     
                     if(chatdata.id==user.id){
                         //user sent this message
-                        liData="<li class='usermsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+chatdata.msg+"</p> </span></div></li>"
+                        liData="<li class='usermsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+msg+"</p> </span></div></li>"
                         
                     }else{
                         //other people send this message
-                        liData="<li class='othersmsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+chatdata.msg+"</p> </span></div></li>";
+                        liData="<li class='othersmsg' id='"+chatdata.id+"'> <div class='box'> <img src='img/avtaars/"+chatdata.avtaar+".png'> <span class='msg'><p>"+msg+"</p> </span></div></li>";
                         
                     }
                         
                     $(".chat ul").append(liData)
                 })
+                
+                function checksmileys(_msg){
+                    //smileyarr
+                    var msgArr= _msg.split(" ");
+                    var finalstr=""
+                    
+                    for(let i=0;i<msgArr.length;i++){
+                        str=msgArr[i];
+                        
+                        console.log(msgArr[i],"<<ABC")
+                        
+                        for(let j=0;j<smileyarr.length;j++){
+                            smiley=smileyarr[j].str;
+                            
+                           if(str.trim()==smiley.trim()){
+                               console.log(str,"<<<<msgArr[i] A")
+                               str="<img style='width:20px; height:20px; padding:0px 3px;' src='img/smileys/"+smileyarr[j].img+".gif'>";               
+                           }
+                        }
+                        
+                        finalstr+="<span style='float:left;padding:0px 2px;'>"+str+"</span>";
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    return finalstr;
+                    
+                }
+                
+                
 
                 socket.on('welcome',function(data){
                     
@@ -127,9 +164,6 @@
                         
             }
             
-            
-            
-            
             function addnewuser(user){
                 
                 imgpath="img/avtaars/"+user.avtaar+".png";
@@ -166,7 +200,7 @@
         .userlist ul li .usericon{margin: 5px; width:25px; height:25px; float: left;}
         .userlist ul li p{float: left; margin: 0px; height: 30px; line-height: 30px; padding: 0px;}
         
-        .chat ul li{list-style: none;}
+        .chat ul li{list-style: none; margin:2px 0px; float: left;}
         .usermsg .box{width:235px;float: right;}
         .usermsg .box .msg{ float:right; background-color:#4080ff; padding:5px; color:#fff; border-radius: 5px; margin:0px 5px }
         .usermsg .box .msg p{margin:0px;}
@@ -202,34 +236,6 @@
         <div class="chatwrapper">
             <div class="chat">
                 <ul>
-                <!--
-                <li class="usermsg">
-                    <div class="box">
-                        
-                        <img src="img/avtaars/1.png">  
-                        
-                        <span class="msg">
-                            <p>Hello user msg</p>
-                            
-                        </span>
-                        
-                    </div>
-                        
-                </li>
-                    
-                <li class="othersmsg">
-                    
-                    <div class="box">
-                        <img src="img/avtaars/1.png">  
-                        <span class="msg">
-                            <p>Hello user msg</p>
-                        </span>
-                    </div>
-                        
-                </li>-->
-                    
-                    
-                    
                     
                 </ul>
             </div>

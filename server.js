@@ -24,41 +24,41 @@ app.get('/',function(req,res){
     //res.send("hello world")
 })
 
-const general = io.of('/general').clients();
-let users=[];
+//const general = io.of('/general').clients();
+let users={};
 
-
-general.on('connection',function(socket){
+io.on('connection',function(socket){
+    
+    var userid=""
     
     socket.join('general');
     
     socket.on('login',function(_user){
         
-        const _id=socket.id;
+        userid=socket.id;
         
-        general.connected[_id].emit('welcome',{'me':{'users':users,'id':_id},"others":users});
+        io.sockets.connected[userid].emit('welcome',{'me':{'user':_user,'id':userid},"others":users});
         
-        users.push({
-            id:_id,
-            username:_user.uname,
-            avtaar:_user.avtaarid
-        })
+        users[userid]={id:userid,username:_user.uname,avtaar:_user.avtaarid};
         
-        room=general.sockets
-        
-        general.emit('userlogin',users[users.length-1])
+        io.emit('userlogin',users[userid]);
         
     })
     
     
-    socket.on('disconnect',function(_d){
+    socket.on('disconnect',function(_d,_c){
+
+        if(userid){
+            let userdata =users[userid];
+            io.emit('goodbye',users[userid])
+            delete users[userid]
+        }
         
-        console.log('user disconnected');  
     })
     
     socket.on('msgonserver',function(msg){
         
-        general.emit('msgonclient',msg)
+        io.emit('msgonclient',msg)
     })
     
 })

@@ -5,7 +5,7 @@
 	<script type="text/javascript">
         
         var socket;
-        var user={uname:'',avtaarid:0,msg:'',_id:''}
+        var user={username:'',avtaar:0,msg:'',id:''}
     
         window.onload=function(){
             
@@ -72,7 +72,7 @@
             })
             
             function login(){
-                socket = io('/general');
+                socket = io();
             
                 socket.on('msgonclient',function(chatdata){
                     console.log('recieve messege ',chatdata);
@@ -80,23 +80,55 @@
                 })
 
                 socket.on('welcome',function(data){
-                    console.log(data,"<<<data welcome")
+                    
+                    console.log(data,"<<<data")
+                    
+                    user.id=data.me.id;
+                    user.username=data.me.user.uname;
+                    user.avtaar=data.me.user.avtaarid;
+                    
+                    //displaying user
+                    addnewuser(user)
+                    
+                    oldusers=data.others;
+                    
+                    for(i in oldusers){
+                        //displaying other existing users in chat
+                        addnewuser(oldusers[i])
+                    }
+                    
                 })
                 
                 socket.on('userlogin',function(_user){
-                    addnewuser(_user);
+                    
+                    if(user.id != _user.id){
+                        //adding new user in list
+                         addnewuser(_user)  
+                    }
+                    
+                })
+                
+                socket.on('goodbye',function(_user){
+                    console.log(_user,"<<goodbye")
+                    
+                    $(".userlist ul").find("[id='"+_user.id+"']").remove();
+                    
                 })
                         
             }
             
+            
+            
+            
             function addnewuser(user){
-                
-                console.log(user,"<<<user")
                 
                 imgpath="img/avtaars/"+user.avtaar+".png";
                 
+            //    console.log(user.id,"<<<user id")
+                
                 $(".userlist ul")
-                .append("<li> <div class='usericon'><img src="+imgpath+"></div> <p>"+user.username+"</p> </li>")
+                .append("<li id="+user.id+"> <div class='usericon'><img src="+imgpath+"></div> <p>"+user.username+"</p> </li>")
+                
             }
         }
         
